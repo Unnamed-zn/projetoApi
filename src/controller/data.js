@@ -47,21 +47,20 @@ class Data {
         return response.status(200).json(message);
     }
 
-    updateOrder(request, response) {
+    createOrder(request, response) {
         const info = request.body;
-        console.log(this.data, info);
-        const valido = (info.cliente || info.lanche || info.valor);
-        if (!valido) return response.status(400).json({"Info": "Alguma informação essencial não foi enviada"});
+        const valido = info.cliente && info.lanche && info.valor && !isNaN(info.valor);
+        if (!valido) return response.status(400).json({"Info": "Alguma informação essencial não foi enviada ou é inválida"});
         this.data.push({
             "id": this.data.length? this.data.at(-1).id+1 : 1,
             "cliente": info.cliente,
             "lanche": info.lanche,
             "adicionais": info.adicionais,
-            "valor": info.valor,
+            "valor": Number.parseFloat(info.valor),
             "status": "pendente"
         });
         this.write();
-        response.status(201).json({"info": "Pedido criado com sucesso."});
+        return response.status(201).json({"info": "Pedido criado com sucesso."});
     }
 
     updateOrder(request, response) {
@@ -70,16 +69,32 @@ class Data {
         const index = this.data.findIndex(order => order.id === parseInt(request.params.id));
         
         const newData = request.body;
+        const valido = (!newData.valor || typeof newData.valor === Number || newData.valor.trim().length===0) && (!newData.status || ['pendente','preparando','pronto','entregue'].includes(newData.status));
+        if (!valido) return response.status(400).json({"Info": "Alguma informação enviada é inválida"});
+
+
+
         this.data[index] = {
             "id": order.id,
-            "cliente": newData.cliente? newData.cliente : order.cliente,
-            "lanche": newData.lanche? newData.lanche : order.lanche,
-            "adicionais": newData.adicionais? newData.adicionais : order.adicionais,
-            "valor": newData.valor? newData.valor : order.valor,
-            "status": newData.status? newData.status : order.status,
+            "cliente": (newData.cliente && newData.cliente.trim().length>1)? newData.cliente.trim() : order.cliente,
+            "lanche": (newData.lanche && newData.lanche.trim().length>1)? newData.lanche.trim() : order.lanche,
+            "adicionais": (newData.adicionais && newData.adicionais.trim().length>1)? newData.adicionais.trim() : order.adicionais,
+            "valor": (newData.valor && newData.valor.trim().length>1)? newData.valor : order.valor,
+            "status": (newData.status && newData.status.trim().length>1)? newData.status.trim() : order.status,
         };
 
         this.write();
+        return response.status(200).json({'info': 'Atualização concluída'});
+    }
+
+    deleteOrder(request, response) {
+        const message = this.data.find(order => order.id === parseInt(request.params.id));
+        if (!message) return response.status(404).json({"Info": "Pedido não encontrado"});
+
+        const index = this.data.findIndex(order => order.id === parseInt(request.params.id));
+        this.data.splice(index, 1);
+        this.write();
+        return response.status(200).json({'info': 'Remoção concluída'});
     }
 }
 

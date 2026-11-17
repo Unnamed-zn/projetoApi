@@ -22,4 +22,6 @@ routes.post('/pedidos', (request, response) => data.createOrder(request, respons
 
 routes.put('/pedidos/id=:id', (request, response) => data.updateOrder(request, response));
 
+routes.delete('/pedidos/id=:id', (request, response) => data.deleteOrder(request, response));
+
 export default routes;
