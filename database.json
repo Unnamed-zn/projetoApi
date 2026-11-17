@@ -1,0 +1,34 @@
+[
+ {
+  "id": 1,
+  "cliente": "Roberto",
+  "lanche": "X Ratão",
+  "adicionais": "Batata com molho de queijo de suvaco",
+  "valor": 57.99,
+  "status": "pendente"
+ },
+ {
+  "id": 2,
+  "cliente": "Leonardo",
+  "lanche": "X coração",
+  "adicionais": "Batata com molho de queijo de suvaco",
+  "valor": 39.99,
+  "status": "pendente"
+ },
+ {
+  "id": 3,
+  "cliente": "Pietro",
+  "lanche": "X bacon",
+  "adicionais": "Batata com molho de queijo",
+  "valor": 41.99,
+  "status": "pendente"
+ },
+ {
+  "id": 4,
+  "cliente": "Pablo",
+  "lanche": "X tudo",
+  "adicionais": "Batata com molho de queijo de leite de boi",
+  "valor": 45.99,
+  "status": "pendente"
+ }
+]
